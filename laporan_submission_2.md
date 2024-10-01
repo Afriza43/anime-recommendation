@@ -67,31 +67,31 @@ Deskripsi variabel yang ada pada Rating.csv :
 
 1. Distribusi Rating Anime
 
-![Distribusi Rating Anime](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![distribusi_rating_anime](https://github.com/user-attachments/assets/3ac76f4c-2399-47e6-abb0-dea8595754ec)
 
 Sebagaian besar anime yang ada mendapatkan rating antara 6 - 7 dari skala 1 - 10
 
 2. Distribusi Jenis Anime
 
-![Distribusi Jenis Anime](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![distribusi_jenis_anime](https://github.com/user-attachments/assets/e99166d6-10b8-4f2d-8031-7b0f37887fb5)
 
 Sekitar 57% dari anime yang ada, disajikan dalam bentuk serial TV dan tambahan OVA
 
 3. Anime dengan Rating Tertinggi
 
-![Top 10 Highest Rating](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![top_highest_anime](https://github.com/user-attachments/assets/afaf3c86-30a2-4786-9059-e05b86cee806)
 
 Anime tertinggi di anime adalah "Taka no Tsume 8". Selain itu, anime berjudul Gintama memiliki 2 seasons dengan rating yang tinggi
 
 4. Jumlah Anime berdasarkan Genre
 
-![Top 10 Highest Rating](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![jumlah_anime_based_genre](https://github.com/user-attachments/assets/da8c09ad-e624-48c8-bfab-6e3e99b0e7a1)
 
 Anime ber genre Comedy berjumlah paling banyak, kemudian diikuti genre Action, Adventure, dan Fantasy
 
-5. Jumlah Anime berdasarkan Genre
+5. Anime dengan Member Komunitas Terbanyak
 
-![Top 10 Highest Community Member](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![top_highest_anime_community](https://github.com/user-attachments/assets/0fddd8af-82a9-49da-bb1f-822dde8d159c)
 
 Death Note menjadi anime yang memiliki member paling banyak dalam komunitas anime nya. Diikuti dengan anime Shingeki no Kyojin dan Sword Art Online
 
@@ -161,7 +161,7 @@ Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Fil
 
 ### Output
 
-![Top 5 Recommendation](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![Top 5 Recommendation](https://github.com/user-attachments/assets/ec75d9fb-bc5e-453a-9278-e5cc4efccb2b)
 
 2. Collaborative Filtering (menggunakan model RecommenderNet)
    Pendekatan Collaborative Filtering ini didasarkan pada preferensi pengguna dan item. Model ini dilatih menggunakan embedding untuk memetakan hubungan antara pengguna dan anime yang mereka beri rating.
@@ -181,7 +181,7 @@ Kelebihan:
 
 ### Output
 
-![Top 10 Recommendation](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
+![Top 10 Recommendation](https://github.com/user-attachments/assets/b5fa8550-fd14-437f-8591-8b68eb0abc32)
 
 ## Evaluation
 
