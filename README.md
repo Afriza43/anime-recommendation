@@ -1,3 +1,5 @@
+# Sistem Rekomendasi Anime dengan Content-Based Filtering dan Collaborative Filtering
+
 ## Project Overview
 
 Dalam beberapa tahun terakhir, popularitas anime telah meningkat secara signifikan di seluruh dunia. Dikutip dari jurnal "Kepopuleran dan Penerimaan Anime Jepang di Indonesia", penggemar anime kini lebih sering menikmati anime melalui layanan streaming atau aplikasi khusus anime seperti Netflix dan AbemaTV. Selain itu, platform seperti MyAnimeList menyediakan tempat bagi penggemar anime untuk menonton, mengulas, dan memberikan peringkat pada anime favorit mereka.
