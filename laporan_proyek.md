@@ -36,8 +36,8 @@ Untuk menjawab problem statement di atas, dibuatlah sistem rekomendasi dengan tu
 
 Dataset yang digunakan berisi tentang data anime yang diambil dari situs MyAnimeList. Terdapat 2 dataset berformat .csv, yaitu:
 
-- Anime.csv : berisi informasi tentang anime dari id anime, nama anime, genre, member komunitas, dan tipe penayangan.
-- Rating.csv, yang berisi penilaian rating anime oleh user
+- Anime.csv : berisi informasi tentang anime dari id anime, nama anime, genre, member komunitas, dan tipe penayangan. Pada dataset ini terdapat 12.294 baris data dengan 7 kolom. Pada dataset ini terdapat nilai kosong sebanyak 62 data pada kolom genre, 25 data pada kolom type, dan 230 data pada kolom rating. Tidak ada data duplikat pada dataset ini.
+- Rating.csv, yang berisi penilaian rating anime oleh user. Dataset ini cukup bersih dan mengandung 7.813.737 baris data dengan 3 kolom.
 
 Dataset: [Anime Recommendations Database](https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database).
 
@@ -101,52 +101,46 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 
 - Menggabungkan Dataset:
   Dataset anime dan rating digabungkan berdasarkan kolom 'anime_id' untuk mendapatkan data lengkap yang mencakup informasi rating pengguna terhadap anime tertentu.
-
-  Alasan: Menggabungkan data penting untuk mendapatkan hubungan antara pengguna dan anime yang mereka beri rating. Hal ini diperlukan untuk analisis lebih lanjut dan pembuatan sistem rekomendasi.
+  - Alasan: Menggabungkan data penting untuk mendapatkan hubungan antara pengguna dan anime yang mereka beri rating. Hal ini diperlukan untuk analisis lebih lanjut dan pembuatan sistem rekomendasi.
 
 - Mengubah Nama Kolom:
   Kolom 'rating_user' diganti namanya menjadi 'user_rating' untuk kejelasan.
-
-  Alasan: Memberikan nama yang lebih deskriptif pada kolom sehingga lebih mudah dipahami dan tidak menyebabkan kebingungan.
+  - Alasan: Memberikan nama yang lebih deskriptif pada kolom sehingga lebih mudah dipahami dan tidak menyebabkan kebingungan.
 
 - Cek dan Hapus Data Kosong:
   Dilakukan pengecekan terhadap data kosong, dan semua data yang hilang ditangani sesuai kebutuhan.
 
 - Membuat Salinan Dataset:
   Dataset asli disalin ke dalam variabel baru (anime_data) untuk menjaga data mentah tetap aman dan bisa digunakan kembali di kemudian hari jika diperlukan.
-
-  Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
+  - Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
 
 - Konversi ke Bentuk List:
   Beberapa kolom seperti 'anime_id', 'name', dan 'genre' diubah menjadi list agar mudah diakses dan dimanipulasi.
 
 - Mempersiapkan Dataset untuk Rekomendasi Berdasarkan Genre:
   Dataset baru (anime_new) dibentuk dengan hanya menyertakan kolom yang relevan untuk analisis rekomendasi berbasis genre, yaitu 'id', 'anime_name', dan 'genre'.
-
-  Alasan: Mengisolasi kolom-kolom yang relevan untuk membangun model berbasis genre.
+  - Alasan: Mengisolasi kolom-kolom yang relevan untuk membangun model berbasis genre.
 
 - Cek dan Hapus Duplikat:
   Dilakukan pengecekan terhadap data duplikat, dan jika ditemukan, data duplikat dihapus.
-
-  Alasan: Menghindari duplikasi yang bisa mempengaruhi hasil analisis dan akurasi model.
+  - Alasan: Menghindari duplikasi yang bisa mempengaruhi hasil analisis dan akurasi model.
 
 - Memecah Genre Anime:
   Genre anime yang ada dalam satu string dipisahkan menggunakan teknik preprocessing, menghapus delimiter (tanda koma) sehingga setiap genre bisa diolah secara independen.
+  - Alasan: Genre dalam format list atau string gabungan tidak bisa langsung digunakan oleh model machine learning seperti TfidfVectorizer. Oleh karena itu, preprocessing diperlukan agar setiap genre bisa diproses secara terpisah.
 
-  Alasan: Genre dalam format list atau string gabungan tidak bisa langsung digunakan oleh model machine learning seperti TfidfVectorizer. Oleh karena itu, preprocessing diperlukan agar setiap genre bisa diproses secara terpisah.
+- TF-IDF (Term Frequency-Inverse Document Frequency):
+  Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
+  - Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime. Proses ini memudahkan mesin untuk memahami data.
 
 ## Modeling
 
 Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Filtering dan Collaborative Filtering untuk memberikan rekomendasi anime.
 
-1. Content-Based Filtering (berbasis genre anime menggunakan TF-IDF dan Cosine Similarity)
+### Model Content-Based Filtering (berbasis genre anime menggunakan TF-IDF dan Cosine Similarity)
    Model ini menggunakan pendekatan berbasis konten, di mana rekomendasi diberikan berdasarkan kesamaan genre antara anime.
 
 ### Algoritma
-
-- TF-IDF (Term Frequency-Inverse Document Frequency):
-  Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
-  Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime.
 
 - Cosine Similarity:
   Mengukur kesamaan antara anime berdasarkan TF-IDF dari genre untuk memberikan rekomendasi anime dengan genre yang mirip.
@@ -159,12 +153,22 @@ Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Fil
     Kekurangan:
   - Terbatas pada informasi yang ada di metadata (genre). Tidak bisa menangkap preferensi pengguna secara eksplisit.
 
+### Proses Modeling
+1) Data Preparation:
+Genre dari setiap anime pada dataset dibersihkan dan dipisahkan, lalu diolah menggunakan TF-IDF Vectorizer untuk mendapatkan matriks vektor genre.
+
+2) Cosine Similarity:
+Setelah mendapatkan vektor dari hasil TF-IDF, saya menghitung cosine similarity antar-anime untuk mengetahui seberapa mirip anime satu dengan yang lainnya berdasarkan genre.
+
+3) Rekomendasi:
+Dengan menggunakan hasil cosine similarity, Saya membangun fungsi rekomendasi yang akan memberikan daftar anime yang paling mirip dengan anime yang dimasukkan sebagai input oleh pengguna.
+
 ### Output
 
 ![Top 5 Recommendation](https://github.com/user-attachments/assets/ec75d9fb-bc5e-453a-9278-e5cc4efccb2b)
 
-2. Collaborative Filtering (menggunakan model RecommenderNet)
-   Pendekatan Collaborative Filtering ini didasarkan pada preferensi pengguna dan item. Model ini dilatih menggunakan embedding untuk memetakan hubungan antara pengguna dan anime yang mereka beri rating.
+### Model Collaborative Filtering (menggunakan model RecommenderNet)
+   Pendekatan Collaborative Filtering didasarkan pada analisis preferensi pengguna dan kesamaan antar pengguna atau antar item yang mereka beri rating. Dalam pendekatan ini, digunakan model deep learning RecommenderNet yang memanfaatkan embedding untuk membuat rekomendasi berdasarkan pola hubungan antara pengguna dan anime yang mereka beri rating.
 
 ### Algoritma:
 
@@ -179,21 +183,53 @@ Kelebihan:
 - Membutuhkan banyak data pengguna untuk menghasilkan rekomendasi yang baik.
 - Proses training model lebih kompleks dan memerlukan waktu yang lebih lama.
 
+### Proses
+1) Data Preparation:
+- Data rating diproses dengan menghapus rating yang bernilai -1 karena hal tersebut menandakan bahwa pengguna hanya menonton anime tanpa memberikan rating.
+Kemudian, data diambil sebanyak 2000 data untuk keperluan komputasi yang lebih ringan.
+- Melakukan encoding pada kolom user_id dan anime_id untuk mengonversi ke dalam bentuk indeks integer.
+- Rating juga dikonversi menjadi rentang antara 0 hingga 1.
+
+2) Modeling:
+- RecommenderNet adalah model berbasis embedding yang menggunakan lapisan embedding untuk pengguna dan anime.
+- Model ini dilatih menggunakan data rating yang dimiliki, di mana embedding belajar merepresentasikan hubungan antara pengguna dan anime.
+- Pada proses training, model dioptimasi menggunakan Binary Crossentropy sebagai fungsi loss dan Adam Optimizer dengan learning rate 0.001.
+
+3) Evaluasi dan Rekomendasi:
+- Setelah model dilatih, dilakukan evaluasi terhadap model dengan menggunakan data validasi.
+- Model menggunakan Root Mean Squared Error (RMSE) sebagai metrik evaluasi untuk melihat seberapa jauh prediksi rating dari model terhadap data rating asli.
+- Membuat fungsi untuk menampilkan rekomendasi anime berdasarkan preferensi user lain yang mirip
+
 ### Output
 
 ![Top 10 Recommendation](https://github.com/user-attachments/assets/b5fa8550-fd14-437f-8591-8b68eb0abc32)
 
 ## Evaluation
 
-Dalam proyek ini, metrik evaluasi yang digunakan adalah Root Mean Squared Error (RMSE). RMSE adalah ukuran yang biasa digunakan untuk mengevaluasi kualitas prediksi dalam model rekomendasi. RMSE mengukur perbedaan antara nilai yang diprediksi oleh model dan nilai aktual dalam dataset. Nilai RMSE yang lebih rendah menunjukkan bahwa model memberikan prediksi yang lebih akurat.
+### Hasil Evaluasi Content-Based Filtering
+
+Model menghitung kemiripan(similiarity) berdasarkan genre anime, dengan Cosine Similarity sebagai ukuran utama. Cosine Similarity digunakan untuk memberikan rekomendasi yang mirip secara konten dengan anime yang sudah ditonton oleh pengguna.
+
+Kesimpulan:
+- Content-Based Filtering memberikan rekomendasi berdasarkan genre, yang memungkinkan pengguna untuk menemukan anime serupa dengan yang telah mereka tonton.
+- Solusi ini cocok untuk situasi di mana data pengguna terbatas, karena tidak memerlukan banyak informasi pengguna lain, hanya informasi tentang genre.
+- Kelebihannya, model dapat memberikan rekomendasi yang relevan meskipun data rating sedikit atau tidak tersedia.
+
+Dari output model Cosine-Similiarity, dapat dilihat bahwa model dapat membarikan rekomendasi anime dengan genre serupa.
+
+### Hasil Evaluasi Collaborative Filtering
+   
+Dalam proyek ini, metrik evaluasi yang digunakan adalah Root Mean Squared Error (RMSE). RMSE adalah ukuran yang biasa digunakan untuk mengevaluasi kualitas prediksi dalam model rekomendasi. RMSE mengukur perbedaan antara nilai yang diprediksi oleh model dan nilai aktual dalam dataset. Nilai RMSE yang lebih rendah menunjukkan bahwa model memberikan prediksi yang lebih akurat. Metrik ini cocok untuk mengevaluasi rekomendasi berbasis rating seperti pada Collaborative Filtering.
 
 ![Rumus RMSE](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
-
-### Hasil Evaluasi
 
 - Training Loss: 0.5203
 - Training RMSE: 0.0910
 - Validation Loss: 0.5966
 - Validation RMSE: 0.2094
 
-Interpretasi: Nilai RMSE yang rendah menunjukkan bahwa model memberikan prediksi yang cukup baik untuk data pelatihan, dengan hasil RMSE sekitar 0.0910. Pada data validasi, nilai RMSE meningkat menjadi 0.2094, yang menunjukkan adanya perbedaan kecil antara prediksi dan data aktual.
+Training RMSE yang rendah (0.0910) menunjukkan bahwa model memberikan prediksi yang sangat baik pada data pelatihan. Validation RMSE sebesar 0.2094 menunjukkan bahwa model juga performa baik pada data validasi, dengan sedikit perbedaan antara nilai prediksi dan nilai sebenarnya.
+
+Kesimpulan:
+- Pendekatan ini menjawab problem statement, yaitu memberikan rekomendasi anime berdasarkan preferensi pengguna.
+- Dengan RMSE yang rendah, model ini efektif dalam memberi rekomendasi anime dari preferensi user lain yang memiliki selera genre yang mirip.
