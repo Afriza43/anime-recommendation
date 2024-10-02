@@ -137,7 +137,7 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 
 Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Filtering dan Collaborative Filtering untuk memberikan rekomendasi anime.
 
-1. Content-Based Filtering (berbasis genre anime menggunakan TF-IDF dan Cosine Similarity)
+### Model Content-Based Filtering (berbasis genre anime menggunakan TF-IDF dan Cosine Similarity)
    Model ini menggunakan pendekatan berbasis konten, di mana rekomendasi diberikan berdasarkan kesamaan genre antara anime.
 
 ### Algoritma
@@ -167,7 +167,7 @@ Dengan menggunakan hasil cosine similarity, Saya membangun fungsi rekomendasi ya
 
 ![Top 5 Recommendation](https://github.com/user-attachments/assets/ec75d9fb-bc5e-453a-9278-e5cc4efccb2b)
 
-2. Collaborative Filtering (menggunakan model RecommenderNet)
+### Model Collaborative Filtering (menggunakan model RecommenderNet)
    Pendekatan Collaborative Filtering didasarkan pada analisis preferensi pengguna dan kesamaan antar pengguna atau antar item yang mereka beri rating. Dalam pendekatan ini, digunakan model deep learning RecommenderNet yang memanfaatkan embedding untuk membuat rekomendasi berdasarkan pola hubungan antara pengguna dan anime yang mereka beri rating.
 
 ### Algoritma:
