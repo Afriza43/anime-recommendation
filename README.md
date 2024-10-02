@@ -36,8 +36,8 @@ Untuk menjawab problem statement di atas, dibuatlah sistem rekomendasi dengan tu
 
 Dataset yang digunakan berisi tentang data anime yang diambil dari situs MyAnimeList. Terdapat 2 dataset berformat .csv, yaitu:
 
-- Anime.csv : berisi informasi tentang anime dari id anime, nama anime, genre, member komunitas, dan tipe penayangan.
-- Rating.csv, yang berisi penilaian rating anime oleh user
+- Anime.csv : berisi informasi tentang anime dari id anime, nama anime, genre, member komunitas, dan tipe penayangan. Pada dataset ini terdapat 12.294 baris data dengan 7 kolom. Pada dataset ini terdapat nilai kosong sebanyak 62 data pada kolom genre, 25 data pada kolom type, dan 230 data pada kolom rating. Tidak ada data duplikat pada dataset ini.
+- Rating.csv, yang berisi penilaian rating anime oleh user. Dataset ini cukup bersih dan mengandung 7.813.737 baris data dengan 3 kolom.
 
 Dataset: [Anime Recommendations Database](https://www.kaggle.com/datasets/CooperUnion/anime-recommendations-database).
 
@@ -135,6 +135,10 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 
   Alasan: Genre dalam format list atau string gabungan tidak bisa langsung digunakan oleh model machine learning seperti TfidfVectorizer. Oleh karena itu, preprocessing diperlukan agar setiap genre bisa diproses secara terpisah.
 
+  - TF-IDF (Term Frequency-Inverse Document Frequency):
+  Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
+  Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime. Proses ini memudahkan mesin untuk memahami data.
+
 ## Modeling
 
 Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Filtering dan Collaborative Filtering untuk memberikan rekomendasi anime.
@@ -143,10 +147,6 @@ Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Fil
    Model ini menggunakan pendekatan berbasis konten, di mana rekomendasi diberikan berdasarkan kesamaan genre antara anime.
 
 ### Algoritma
-
-- TF-IDF (Term Frequency-Inverse Document Frequency):
-  Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
-  Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime.
 
 - Cosine Similarity:
   Mengukur kesamaan antara anime berdasarkan TF-IDF dari genre untuk memberikan rekomendasi anime dengan genre yang mirip.
