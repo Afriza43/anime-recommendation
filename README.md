@@ -206,11 +206,9 @@ Kemudian, data diambil sebanyak 2000 data untuk keperluan komputasi yang lebih r
 
 ## Evaluation
 
-1) Model Content-Based Filtering
+### Hasil Evaluasi Content-Based Filtering
 
-### Hasil Evaluasi Content-Based Filtering:
-- Model menghitung kemiripan(similiarity) berdasarkan genre anime, dengan Cosine Similarity sebagai ukuran utama.
-- Cosine Similarity digunakan untuk memberikan rekomendasi yang mirip secara konten dengan anime yang sudah ditonton oleh pengguna.
+Model menghitung kemiripan(similiarity) berdasarkan genre anime, dengan Cosine Similarity sebagai ukuran utama. Cosine Similarity digunakan untuk memberikan rekomendasi yang mirip secara konten dengan anime yang sudah ditonton oleh pengguna.
 
 Kesimpulan:
 - Content-Based Filtering memberikan rekomendasi berdasarkan genre, yang memungkinkan pengguna untuk menemukan anime serupa dengan yang telah mereka tonton.
@@ -219,13 +217,12 @@ Kesimpulan:
 
 Dari output model Cosine-Similiarity, dapat dilihat bahwa model dapat membarikan rekomendasi anime dengan genre serupa.
 
-2) Model Collaborative Filtering
+### Hasil Evaluasi Collaborative Filtering
    
 Dalam proyek ini, metrik evaluasi yang digunakan adalah Root Mean Squared Error (RMSE). RMSE adalah ukuran yang biasa digunakan untuk mengevaluasi kualitas prediksi dalam model rekomendasi. RMSE mengukur perbedaan antara nilai yang diprediksi oleh model dan nilai aktual dalam dataset. Nilai RMSE yang lebih rendah menunjukkan bahwa model memberikan prediksi yang lebih akurat. Metrik ini cocok untuk mengevaluasi rekomendasi berbasis rating seperti pada Collaborative Filtering.
 
 ![Rumus RMSE](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
 
-### Hasil Evaluasi Collaborative Filtering:
 - Training Loss: 0.5203
 - Training RMSE: 0.0910
 - Validation Loss: 0.5966
