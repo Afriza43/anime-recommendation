@@ -110,6 +110,8 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 - Cek dan Hapus Data Kosong:
   Dilakukan pengecekan terhadap data kosong, dan semua data yang hilang ditangani sesuai kebutuhan.
 
+### Data Preparation untuk Content-Based Filtering
+
 - Membuat Salinan Dataset:
   Dataset asli disalin ke dalam variabel baru (anime_data) untuk menjaga data mentah tetap aman dan bisa digunakan kembali di kemudian hari jika diperlukan.
   - Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
@@ -132,6 +134,38 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 - TF-IDF (Term Frequency-Inverse Document Frequency):
   Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
   - Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime. Proses ini memudahkan mesin untuk memahami data.
+
+### Data Preparation untuk Collaborative Filtering
+
+- Membuat Salinan Dataset:
+  Dataset asli disalin ke dalam variabel baru (df) untuk menjaga data mentah tetap aman dan bisa digunakan kembali di kemudian hari jika diperlukan.
+  - Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
+
+- Data Cleaning:
+  Hapus data rating yang bernilai -1, karena hal tersebut menunjukkan bahwa user hanya menonton tanpa memberi rating
+
+- Pembatasan data:
+  Karena keterbatasan komputasi, hanya 2000 baris data yang digunakan dalam pemodelan. Hal ini dilakukan untuk menghindari penggunaan memori yang berlebihan.
+
+- Encoding fitur ‘user_id’ dan ‘anime_id’ ke dalam indeks integer:
+  Fitur user_id dan anime_id di-encode menjadi indeks integer agar dapat digunakan dalam model.
+  - Mengubah user_id dan anime_id menjadi list unik.
+  - Melakukan encoding untuk kedua fitur tersebut.
+  - Menyimpan hasil mapping ke dalam dataframe baru untuk proses lebih lanjut.
+  - Alasan: Encoding dilakukan untuk mengubah data non-numerik menjadi numerik, sehingga model dapat memahami dan memprosesnya.
+ 
+- Mengonversi rating menjadi float:
+  Rating diubah menjadi tipe data float agar dapat diproses oleh model machine learning dengan baik.
+
+- Mengecek informasi penting:
+  Beberapa informasi penting seperti jumlah pengguna, jumlah anime, serta nilai rating minimum dan maksimum diekstrak untuk mengetahui cakupan dataset.
+
+- Splitting Data
+  Tahapan berikutnya adalah membagi data menjadi data training dan data validasi dengan komposisi 80:20. Tahapan :
+  - Dataset diacak secara acak agar distribusi data tidak bias.
+  - Membuat variabel input dan output. Variabel X berisi kombinasi user dan anime. Variabel y berisi rating, yang di-skala ulang ke dalam rentang 0 hingga 1. Hal ini dilakukan agar proses training model lebih stabil.
+  - Membagi dataset:
+    Dataset dibagi menjadi 80% untuk data training dan 20% untuk data validasi.
 
 ## Modeling
 
@@ -184,18 +218,13 @@ Kelebihan:
 - Proses training model lebih kompleks dan memerlukan waktu yang lebih lama.
 
 ### Proses
-1) Data Preparation:
-- Data rating diproses dengan menghapus rating yang bernilai -1 karena hal tersebut menandakan bahwa pengguna hanya menonton anime tanpa memberikan rating.
-Kemudian, data diambil sebanyak 2000 data untuk keperluan komputasi yang lebih ringan.
-- Melakukan encoding pada kolom user_id dan anime_id untuk mengonversi ke dalam bentuk indeks integer.
-- Rating juga dikonversi menjadi rentang antara 0 hingga 1.
 
-2) Modeling:
+1) Modeling:
 - RecommenderNet adalah model berbasis embedding yang menggunakan lapisan embedding untuk pengguna dan anime.
 - Model ini dilatih menggunakan data rating yang dimiliki, di mana embedding belajar merepresentasikan hubungan antara pengguna dan anime.
 - Pada proses training, model dioptimasi menggunakan Binary Crossentropy sebagai fungsi loss dan Adam Optimizer dengan learning rate 0.001.
 
-3) Evaluasi dan Rekomendasi:
+2) Evaluasi dan Rekomendasi:
 - Setelah model dilatih, dilakukan evaluasi terhadap model dengan menggunakan data validasi.
 - Model menggunakan Root Mean Squared Error (RMSE) sebagai metrik evaluasi untuk melihat seberapa jauh prediksi rating dari model terhadap data rating asli.
 - Membuat fungsi untuk menampilkan rekomendasi anime berdasarkan preferensi user lain yang mirip
@@ -208,14 +237,26 @@ Kemudian, data diambil sebanyak 2000 data untuk keperluan komputasi yang lebih r
 
 ### Hasil Evaluasi Content-Based Filtering
 
-Model menghitung kemiripan(similiarity) berdasarkan genre anime, dengan Cosine Similarity sebagai ukuran utama. Cosine Similarity digunakan untuk memberikan rekomendasi yang mirip secara konten dengan anime yang sudah ditonton oleh pengguna.
+Dalam proyek ini, metrik evaluasi yang digunakan untuk model content-based filtering adalah metrik precision. Dalam sistem rekomendasi, precision adalah jumlah item rekomendasi yang relevan. Metrik ini tidak bisa dipanggil melalui library scikit learn karena tidak ada data target/label seperti pada supervised learning.
 
-Kesimpulan:
-- Content-Based Filtering memberikan rekomendasi berdasarkan genre, yang memungkinkan pengguna untuk menemukan anime serupa dengan yang telah mereka tonton.
-- Solusi ini cocok untuk situasi di mana data pengguna terbatas, karena tidak memerlukan banyak informasi pengguna lain, hanya informasi tentang genre.
-- Kelebihannya, model dapat memberikan rekomendasi yang relevan meskipun data rating sedikit atau tidak tersedia.
+Dari hasil rekomendasi di tahap modeling, diketahui bahwa anime Mob Psycho 100 termasuk ke dalam genre Action, Comedy, Slice of Life, Supernatural. Dari 5 item yang direkomendasikan, 5 anime memiliki genre yang sama (similar). Artinya, precision sistem kita sebesar 5/5 atau 100%.
 
-Dari output model Cosine-Similiarity, dapat dilihat bahwa model dapat membarikan rekomendasi anime dengan genre serupa.
+![Rumus Precision Sistem Rekomendasi](https://miro.medium.com/v2/resize:fit:1400/0*66v_CbuEE0gtjuCK)
+
+Pada contoh rekomendasi anime di bawah ini dengan rekomendasi yang mirip dengan anime Mob Psycho 100 termasuk ke dalam genre Action, Comedy, Slice of Life, Supernatural:
+
+| Anime Name                                      | Genre                                  |
+|-------------------------------------------------|----------------------------------------|
+| Dororonpa!                                      | Comedy Slice of Life Supernatural      |
+| Peeping Life x Kaijuu Sakaba Kaiji: Kaijuu-tac... | Comedy Slice of Life Supernatural      |
+| Tansu Warashi.                                  | Comedy Slice of Life Supernatural      |
+| Flying Witch Petit                              | Comedy Slice of Life Supernatural      |
+| Musaigen no Phantom World                       | Action Comedy Fantasy Slice of Life Supernatural |
+
+Terdapat 5 anime rekomendasi dengan genre yang mirip dengan anime Mob Psycho 100, berarti :
+- Precision = 5/5. Jadi presisinya = 100%
+
+Ini berarti sistem rekomendasi memiliki Precision 100% atau 1.0, yang menunjukkan bahwa semua rekomendasi sesuai dengan genre yang mirip dengan Mob Psycho 100.
 
 ### Hasil Evaluasi Collaborative Filtering
    
