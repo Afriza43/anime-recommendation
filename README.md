@@ -101,43 +101,37 @@ Pada bagian ini, kita menerapkan beberapa teknik Data Preparation untuk mempersi
 
 - Menggabungkan Dataset:
   Dataset anime dan rating digabungkan berdasarkan kolom 'anime_id' untuk mendapatkan data lengkap yang mencakup informasi rating pengguna terhadap anime tertentu.
-
-  Alasan: Menggabungkan data penting untuk mendapatkan hubungan antara pengguna dan anime yang mereka beri rating. Hal ini diperlukan untuk analisis lebih lanjut dan pembuatan sistem rekomendasi.
+  - Alasan: Menggabungkan data penting untuk mendapatkan hubungan antara pengguna dan anime yang mereka beri rating. Hal ini diperlukan untuk analisis lebih lanjut dan pembuatan sistem rekomendasi.
 
 - Mengubah Nama Kolom:
   Kolom 'rating_user' diganti namanya menjadi 'user_rating' untuk kejelasan.
-
-  Alasan: Memberikan nama yang lebih deskriptif pada kolom sehingga lebih mudah dipahami dan tidak menyebabkan kebingungan.
+  - Alasan: Memberikan nama yang lebih deskriptif pada kolom sehingga lebih mudah dipahami dan tidak menyebabkan kebingungan.
 
 - Cek dan Hapus Data Kosong:
   Dilakukan pengecekan terhadap data kosong, dan semua data yang hilang ditangani sesuai kebutuhan.
 
 - Membuat Salinan Dataset:
   Dataset asli disalin ke dalam variabel baru (anime_data) untuk menjaga data mentah tetap aman dan bisa digunakan kembali di kemudian hari jika diperlukan.
-
-  Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
+  - Alasan: Menjaga data asli tetap utuh selama proses pemrosesan dan pemodelan.
 
 - Konversi ke Bentuk List:
   Beberapa kolom seperti 'anime_id', 'name', dan 'genre' diubah menjadi list agar mudah diakses dan dimanipulasi.
 
 - Mempersiapkan Dataset untuk Rekomendasi Berdasarkan Genre:
   Dataset baru (anime_new) dibentuk dengan hanya menyertakan kolom yang relevan untuk analisis rekomendasi berbasis genre, yaitu 'id', 'anime_name', dan 'genre'.
-
-  Alasan: Mengisolasi kolom-kolom yang relevan untuk membangun model berbasis genre.
+  - Alasan: Mengisolasi kolom-kolom yang relevan untuk membangun model berbasis genre.
 
 - Cek dan Hapus Duplikat:
   Dilakukan pengecekan terhadap data duplikat, dan jika ditemukan, data duplikat dihapus.
-
-  Alasan: Menghindari duplikasi yang bisa mempengaruhi hasil analisis dan akurasi model.
+  - Alasan: Menghindari duplikasi yang bisa mempengaruhi hasil analisis dan akurasi model.
 
 - Memecah Genre Anime:
   Genre anime yang ada dalam satu string dipisahkan menggunakan teknik preprocessing, menghapus delimiter (tanda koma) sehingga setiap genre bisa diolah secara independen.
+  - Alasan: Genre dalam format list atau string gabungan tidak bisa langsung digunakan oleh model machine learning seperti TfidfVectorizer. Oleh karena itu, preprocessing diperlukan agar setiap genre bisa diproses secara terpisah.
 
-  Alasan: Genre dalam format list atau string gabungan tidak bisa langsung digunakan oleh model machine learning seperti TfidfVectorizer. Oleh karena itu, preprocessing diperlukan agar setiap genre bisa diproses secara terpisah.
-
-  - TF-IDF (Term Frequency-Inverse Document Frequency):
+- TF-IDF (Term Frequency-Inverse Document Frequency):
   Setiap genre dianalisis dan diubah menjadi representasi numerik dengan TfidfVectorizer.
-  Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime. Proses ini memudahkan mesin untuk memahami data.
+  - Alasan: TF-IDF digunakan untuk mengukur bobot kepentingan genre yang muncul di setiap anime. Proses ini memudahkan mesin untuk memahami data.
 
 ## Modeling
 
