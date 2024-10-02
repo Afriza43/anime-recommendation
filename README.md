@@ -159,12 +159,22 @@ Pada tahapan ini, kita membangun dua model sistem rekomendasi: Content-Based Fil
     Kekurangan:
   - Terbatas pada informasi yang ada di metadata (genre). Tidak bisa menangkap preferensi pengguna secara eksplisit.
 
+### Proses Modeling
+1) Data Preparation:
+Genre dari setiap anime pada dataset dibersihkan dan dipisahkan, lalu diolah menggunakan TF-IDF Vectorizer untuk mendapatkan matriks vektor genre.
+
+2) Cosine Similarity:
+Setelah mendapatkan vektor dari hasil TF-IDF, saya menghitung cosine similarity antar-anime untuk mengetahui seberapa mirip anime satu dengan yang lainnya berdasarkan genre.
+
+3) Rekomendasi:
+Dengan menggunakan hasil cosine similarity, Saya membangun fungsi rekomendasi yang akan memberikan daftar anime yang paling mirip dengan anime yang dimasukkan sebagai input oleh pengguna.
+
 ### Output
 
 ![Top 5 Recommendation](https://github.com/user-attachments/assets/ec75d9fb-bc5e-453a-9278-e5cc4efccb2b)
 
 2. Collaborative Filtering (menggunakan model RecommenderNet)
-   Pendekatan Collaborative Filtering ini didasarkan pada preferensi pengguna dan item. Model ini dilatih menggunakan embedding untuk memetakan hubungan antara pengguna dan anime yang mereka beri rating.
+   Pendekatan Collaborative Filtering didasarkan pada analisis preferensi pengguna dan kesamaan antar pengguna atau antar item yang mereka beri rating. Dalam pendekatan ini, digunakan model deep learning RecommenderNet yang memanfaatkan embedding untuk membuat rekomendasi berdasarkan pola hubungan antara pengguna dan anime yang mereka beri rating.
 
 ### Algoritma:
 
@@ -179,21 +189,56 @@ Kelebihan:
 - Membutuhkan banyak data pengguna untuk menghasilkan rekomendasi yang baik.
 - Proses training model lebih kompleks dan memerlukan waktu yang lebih lama.
 
+### Proses
+1) Data Preparation:
+- Data rating diproses dengan menghapus rating yang bernilai -1 karena hal tersebut menandakan bahwa pengguna hanya menonton anime tanpa memberikan rating.
+Kemudian, data diambil sebanyak 2000 data untuk keperluan komputasi yang lebih ringan.
+- Melakukan encoding pada kolom user_id dan anime_id untuk mengonversi ke dalam bentuk indeks integer.
+- Rating juga dikonversi menjadi rentang antara 0 hingga 1.
+
+2) Modeling:
+- RecommenderNet adalah model berbasis embedding yang menggunakan lapisan embedding untuk pengguna dan anime.
+- Model ini dilatih menggunakan data rating yang dimiliki, di mana embedding belajar merepresentasikan hubungan antara pengguna dan anime.
+- Pada proses training, model dioptimasi menggunakan Binary Crossentropy sebagai fungsi loss dan Adam Optimizer dengan learning rate 0.001.
+
+3) Evaluasi dan Rekomendasi:
+- Setelah model dilatih, dilakukan evaluasi terhadap model dengan menggunakan data validasi.
+- Model menggunakan Root Mean Squared Error (RMSE) sebagai metrik evaluasi untuk melihat seberapa jauh prediksi rating dari model terhadap data rating asli.
+- Membuat fungsi untuk menampilkan rekomendasi anime berdasarkan preferensi user lain yang mirip
+
 ### Output
 
 ![Top 10 Recommendation](https://github.com/user-attachments/assets/b5fa8550-fd14-437f-8591-8b68eb0abc32)
 
 ## Evaluation
 
-Dalam proyek ini, metrik evaluasi yang digunakan adalah Root Mean Squared Error (RMSE). RMSE adalah ukuran yang biasa digunakan untuk mengevaluasi kualitas prediksi dalam model rekomendasi. RMSE mengukur perbedaan antara nilai yang diprediksi oleh model dan nilai aktual dalam dataset. Nilai RMSE yang lebih rendah menunjukkan bahwa model memberikan prediksi yang lebih akurat.
+1) Model Content-Based Filtering
+
+### Hasil Evaluasi Content-Based Filtering:
+- Model menghitung kemiripan(similiarity) berdasarkan genre anime, dengan Cosine Similarity sebagai ukuran utama.
+- Cosine Similarity digunakan untuk memberikan rekomendasi yang mirip secara konten dengan anime yang sudah ditonton oleh pengguna.
+
+Kesimpulan:
+- Content-Based Filtering memberikan rekomendasi berdasarkan genre, yang memungkinkan pengguna untuk menemukan anime serupa dengan yang telah mereka tonton.
+- Solusi ini cocok untuk situasi di mana data pengguna terbatas, karena tidak memerlukan banyak informasi pengguna lain, hanya informasi tentang genre.
+- Kelebihannya, model dapat memberikan rekomendasi yang relevan meskipun data rating sedikit atau tidak tersedia.
+
+Dari output model Cosine-Similiarity, dapat dilihat bahwa model dapat membarikan rekomendasi anime dengan genre serupa.
+
+2) Model Collaborative Filtering
+   
+Dalam proyek ini, metrik evaluasi yang digunakan adalah Root Mean Squared Error (RMSE). RMSE adalah ukuran yang biasa digunakan untuk mengevaluasi kualitas prediksi dalam model rekomendasi. RMSE mengukur perbedaan antara nilai yang diprediksi oleh model dan nilai aktual dalam dataset. Nilai RMSE yang lebih rendah menunjukkan bahwa model memberikan prediksi yang lebih akurat. Metrik ini cocok untuk mengevaluasi rekomendasi berbasis rating seperti pada Collaborative Filtering.
 
 ![Rumus RMSE](https://media.geeksforgeeks.org/wp-content/uploads/20200622171741/RMSE1.jpg)
 
-### Hasil Evaluasi
-
+### Hasil Evaluasi Collaborative Filtering:
 - Training Loss: 0.5203
 - Training RMSE: 0.0910
 - Validation Loss: 0.5966
 - Validation RMSE: 0.2094
 
-Interpretasi: Nilai RMSE yang rendah menunjukkan bahwa model memberikan prediksi yang cukup baik untuk data pelatihan, dengan hasil RMSE sekitar 0.0910. Pada data validasi, nilai RMSE meningkat menjadi 0.2094, yang menunjukkan adanya perbedaan kecil antara prediksi dan data aktual.
+Training RMSE yang rendah (0.0910) menunjukkan bahwa model memberikan prediksi yang sangat baik pada data pelatihan. Validation RMSE sebesar 0.2094 menunjukkan bahwa model juga performa baik pada data validasi, dengan sedikit perbedaan antara nilai prediksi dan nilai sebenarnya.
+
+Kesimpulan:
+- Pendekatan ini menjawab problem statement, yaitu memberikan rekomendasi anime berdasarkan preferensi pengguna.
+- Dengan RMSE yang rendah, model ini efektif dalam memberi rekomendasi anime dari preferensi user lain yang memiliki selera genre yang mirip.
